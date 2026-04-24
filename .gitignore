@@ -1,8 +1,7 @@
 # build output
 dist/
 
-# generated data (produced by scripts/fetch-data.mjs)
-src/data/items.json
+# items.json è committato — rigenerato localmente con npm run fetch-data
 # generated types
 .astro/
 
