@@ -136,10 +136,10 @@ function rarityClass(r: string) {
               {item.source}{item.page ? ` p.${item.page}` : ''}
             </td>
             <td class={`col-price${item.msrpCommon ? ' highlight' : ''}`}>
-              {item.msrpCommon ? item.msrpCommon.toLocaleString('it-IT') + ' gp' : '—'}
+              {item.msrpCommon ? item.msrpCommon : '—'}
             </td>
             <td class="col-price">
-              {item.msrpRare ? item.msrpRare.toLocaleString('it-IT') + ' gp' : '—'}
+              {item.msrpRare ? item.msrpRare : '—'}
             </td>
           </tr>
         ))}

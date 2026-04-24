@@ -106,7 +106,7 @@ function buildMeta(item) {
 }
 
 function buildPrices(item) {
-  const fmt = v => v ? v.toLocaleString('it-IT') + ' gp' : null;
+  const fmt = v => v || null;
 
   const prices = [
     { label: 'MSRP Comune', value: fmt(item.msrpCommon), cls: '' },
