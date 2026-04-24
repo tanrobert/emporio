@@ -3,7 +3,12 @@
  * Aggiorna entriesIt in items.json usando le descrizioni italiane da magic_items_with_description.json
  * Mapping: indice italiano (0-325) → id in items.json
  */
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+
+if (!existsSync('magic_items_with_description.json')) {
+  console.log('[merge-italian] magic_items_with_description.json non trovato, skip.');
+  process.exit(0);
+}
 
 const itItems = JSON.parse(readFileSync('magic_items_with_description.json', 'utf-8'));
 const enItems = JSON.parse(readFileSync('src/data/items.json', 'utf-8'));
