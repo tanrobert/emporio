@@ -1,0 +1,23 @@
+{
+  "name": "testd",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "fetch-data": "node scripts/fetch-data.mjs && node scripts/merge-italian.mjs",
+    "dev": "node scripts/fetch-data.mjs && node scripts/merge-italian.mjs && astro dev",
+    "prebuild": "node scripts/fetch-data.mjs && node scripts/merge-italian.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^6.0.8"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "pdf-parse": "^1.1.1"
+  }
+}

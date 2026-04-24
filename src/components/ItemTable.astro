@@ -1,0 +1,156 @@
+---
+interface Item {
+  id: string;
+  name: string;
+  source: string;
+  page: string;
+  type: string;
+  rarity: string;
+  attunement: boolean;
+  attunementNote: string | null;
+  msrpCommon: number | null;
+  msrpRare: number | null;
+  entriesIt: string | null;
+  entriesEn: string | null;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+
+// Build unique filter options
+const rarities = [...new Set(items.map(i => i.rarity).filter(Boolean))].sort((a, b) => {
+  const order = ['mundane', 'common', 'uncommon', 'rare', 'very rare', 'legendary', 'artifact', 'varies', 'unknown'];
+  return (order.indexOf(a) ?? 99) - (order.indexOf(b) ?? 99);
+});
+
+const types = [...new Set(items.map(i => i.type).filter(Boolean))].sort();
+const sources = [...new Set(items.map(i => i.source).filter(Boolean))].sort();
+
+const rarityLabels: Record<string, string> = {
+  'mundane': 'Mondano',
+  'common': 'Comune',
+  'uncommon': 'Non Comune',
+  'rare': 'Raro',
+  'very rare': 'Molto Raro',
+  'legendary': 'Leggendario',
+  'artifact': 'Artefatto',
+  'varies': 'Variabile',
+  'unknown': 'Sconosciuta',
+};
+
+function rarityClass(r: string) {
+  return 'rarity-' + r.toLowerCase().replace(/\s+/g, '-');
+}
+---
+
+<div class="main-content">
+  <!-- Filters -->
+  <div class="filter-bar" role="search" aria-label="Filtra oggetti">
+    <div class="filter-row-search">
+      <input
+        type="search"
+        id="search"
+        placeholder="Cerca per nome…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Cerca per nome"
+      />
+      <span class="result-count" id="result-count" aria-live="polite" aria-atomic="true">
+        {items.length} oggetti
+      </span>
+    </div>
+
+    <div class="filter-row-controls">
+      <select id="filter-rarity" aria-label="Filtra per rarità">
+        <option value="">Tutte le rarità</option>
+        {rarities.map(r => (
+          <option value={r}>{rarityLabels[r] ?? r}</option>
+        ))}
+      </select>
+
+      <select id="filter-type" aria-label="Filtra per tipo">
+        <option value="">Tutti i tipi</option>
+        {types.map(t => (
+          <option value={t}>{t}</option>
+        ))}
+      </select>
+
+      <select id="filter-source" aria-label="Filtra per fonte">
+        <option value="">Tutte le fonti</option>
+        {sources.map(s => (
+          <option value={s}>{s}</option>
+        ))}
+      </select>
+
+      <label class="filter-attunement">
+        <input type="checkbox" id="filter-attunement" />
+        Solo sintonia
+      </label>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper">
+    <table id="items-table" aria-label="Lista oggetti magici">
+      <thead>
+        <tr>
+          <th class="sortable" data-col="name">Nome</th>
+          <th class="sortable" data-col="type">Tipo</th>
+          <th class="sortable" data-col="rarity">Rarità</th>
+          <th>Sintonia</th>
+          <th class="sortable" data-col="source">Fonte</th>
+          <th class="sortable" data-col="msrpCommon">MSRP Comune</th>
+          <th class="sortable" data-col="msrpRare">MSRP Raro</th>
+        </tr>
+      </thead>
+      <tbody>
+        {items.map(item => (
+          <tr
+            data-item-id={item.id}
+            data-rarity={item.rarity}
+            data-type={item.type}
+            data-source={item.source}
+            data-attunement={item.attunement ? 'true' : 'false'}
+          >
+            <td>
+              <button class="item-link" type="button">
+                {item.name}
+              </button>
+            </td>
+            <td>{item.type || '—'}</td>
+            <td>
+              <span class={`rarity-badge ${rarityClass(item.rarity)}`}>
+                {rarityLabels[item.rarity] || item.rarity || '—'}
+              </span>
+            </td>
+            <td>
+              {item.attunement
+                ? <span class="attune-yes" title={item.attunementNote ?? 'Richiede sintonia'}>◆</span>
+                : <span style="color: var(--text-dim)">—</span>
+              }
+            </td>
+            <td style="color: var(--text-muted); font-family: sans-serif; font-size: 0.8rem;">
+              {item.source}{item.page ? ` p.${item.page}` : ''}
+            </td>
+            <td class={`col-price${item.msrpCommon ? ' highlight' : ''}`}>
+              {item.msrpCommon ? item.msrpCommon.toLocaleString('it-IT') + ' gp' : '—'}
+            </td>
+            <td class="col-price">
+              {item.msrpRare ? item.msrpRare.toLocaleString('it-IT') + ' gp' : '—'}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <div class="empty-state" id="empty-state" hidden>
+      Nessun oggetto trovato con questi filtri.
+    </div>
+  </div>
+</div>
+
+<!-- Embed full item data for client-side JS (modal + lang toggle) -->
+<script type="application/json" id="items-data" is:inline set:html={JSON.stringify(items)} />

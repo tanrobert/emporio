@@ -1,0 +1,44 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Emporio di Rory — Oggetti Magici D&D 5e',
+  description = 'Emporio di Rory: compendio oggetti magici D&D 5e con prezzi, rarità e descrizioni in italiano e inglese.',
+} = Astro.props;
+---
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Salta al contenuto principale</a>
+
+    <header class="site-header">
+      <h1 class="site-title">
+        Emporio di Rory
+        <span>D&amp;D 5e · Oggetti Magici</span>
+      </h1>
+      <div class="lang-toggle" role="group" aria-label="Lingua descrizioni">
+        <button id="lang-it" aria-pressed="true">IT</button>
+        <button id="lang-en" aria-pressed="false">EN</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>

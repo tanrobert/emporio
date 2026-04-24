@@ -1,0 +1,36 @@
+# build output
+dist/
+
+# generated data (produced by scripts/fetch-data.mjs)
+src/data/items.json
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+# PDF sorgenti (file locali, troppo grandi per git)
+public/*.pdf
+
+# file sorgente traduzione italiana (locale, non nel repo)
+magic_items_with_description.json
+
+# report generato dagli script di mapping
+scripts/mapping-report.json
