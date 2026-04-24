@@ -7,8 +7,8 @@
   },
   "scripts": {
     "fetch-data": "node scripts/fetch-data.mjs && node scripts/merge-italian.mjs",
-    "dev": "node scripts/fetch-data.mjs && node scripts/merge-italian.mjs && astro dev",
-    "prebuild": "node scripts/fetch-data.mjs && node scripts/merge-italian.mjs",
+    "dev": "astro dev",
+    "prebuild": "node scripts/merge-italian.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
