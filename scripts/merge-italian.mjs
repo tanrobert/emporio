@@ -12,6 +12,10 @@ if (!existsSync('magic_items_with_description.json')) {
 
 const itItems = JSON.parse(readFileSync('magic_items_with_description.json', 'utf-8'));
 const enItems = JSON.parse(readFileSync('src/data/items.json', 'utf-8'));
+// Id rimossi da dedupe.mjs → la copia tenuta ha già ricevuto la traduzione
+const aliases = existsSync('src/data/id-aliases.json')
+  ? JSON.parse(readFileSync('src/data/id-aliases.json', 'utf-8'))
+  : {};
 
 // Mapping: itIndex → array di item ID da aggiornare con questa descrizione italiana
 // Alcuni oggetti italiani coprono più varianti inglesi (es. Dragon Scale Mail)
@@ -350,6 +354,7 @@ enItems.forEach((item, idx) => { idToIdx[item.id] = idx; });
 
 let updated = 0;
 let notFound = 0;
+let deduped = 0;
 const skipped = []; // IT indici senza mapping
 
 for (const [itIdxStr, ids] of Object.entries(MAPPING)) {
@@ -359,6 +364,7 @@ for (const [itIdxStr, ids] of Object.entries(MAPPING)) {
 
   for (const id of ids) {
     const enIdx = idToIdx[id];
+    if (enIdx === undefined && id in aliases) { deduped++; continue; }
     if (enIdx === undefined) {
       console.warn(`⚠️  ID non trovato: ${id} (da "${itItem.name}")`);
       notFound++;
@@ -378,6 +384,7 @@ writeFileSync('src/data/items.json', JSON.stringify(enItems, null, 2), 'utf-8');
 
 console.log(`\n✅ Aggiornati: ${updated} oggetti EN`);
 console.log(`⚠️  ID non trovati: ${notFound}`);
+console.log(`🔗 ID unificati da dedupe: ${deduped}`);
 if (skipped.length) {
   console.log(`\nOggetti IT saltati (senza mapping):`);
   skipped.forEach(s => console.log(' -', s));

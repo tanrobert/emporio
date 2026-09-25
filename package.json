@@ -6,7 +6,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "fetch-data": "node scripts/fetch-data.mjs && node scripts/merge-italian.mjs",
+    "fetch-data": "node scripts/fetch-data.mjs && node scripts/merge-italian.mjs && node scripts/dedupe.mjs && node scripts/apply-sane-prices.mjs",
     "dev": "astro dev",
     "prebuild": "node scripts/merge-italian.mjs",
     "build": "astro build",
